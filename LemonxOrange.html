@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title> LemonxOrange </title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .game-container, .main-menu {
+            text-align: center;
+            width: 100%;
+        }
+
+        .main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .main-menu img {
+            width: 500px;
+            height: auto;
+        }
+
+        .main-menu button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #6200ea;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .main-menu button:hover {
+            background-color: #3700b3;
+        }
+
+        .game-container {
+            display: none;
+        }
+
+        .base-container {
+            position: relative;
+            width: 500px;
+            height: 70px;
+            margin: 20px auto 0 auto;
+        }
+
+        .base-container img {
+            width: 500px;
+            height: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        /* Base image */
+        #base-image {
+            z-index: 1;
+        }
+
+        /* Leggings (category 18 for girl, 19 for boy) - 2nd layer */
+#category18-item1, #category18-item2, /* Girl Leggings */
+#category19-item1, #category19-item2 { /* Boy Leggings */
+    z-index: 2;
+}
+
+/* Underpants, Panties, Boy/Girl Bra: 3rd layer */
+#category1-item1, #category1-item2, #category1-item3, /* Panties */
+#category2-item1, #category2-item2, #category2-item3, /* Girl Bra */
+#category6-item1, #category6-item2, #category6-item3, /* Underpants */
+#category7-item1, #category7-item2, #category7-item3 { /* Boy Bra */
+    z-index: 3;
+}
+
+/* Boy/Girl Boxers: 4th layer */
+#category3-item1, #category3-item2, /* Girl Boxers */
+#category8-item1, #category8-item2 { /* Boy Boxers */
+    z-index: 4;
+}
+
+/* Boy/Girl Sweatshirt, Shoes: 5th layer */
+#category4-item1, #category4-item2, #category4-item3, /* Girl Sweatshirt */
+#category5-item1, /* Boy Sweatshirt */
+#category9-item1, #category9-item2, /* Girl Shoes */
+#category10-item1, #category10-item2 { /* Boy Shoes */
+    z-index: 5;
+}
+
+/* Tops, Bottoms, Dresses: 6th layer */
+#category13-item1, #category13-item2, /* Girl Dress */
+#category14-item1, #category14-item2, /* Girl Top */
+#category15-item1, #category15-item2, /* Boy Top */
+#category11-item1, #category11-item2, #category11-item3, /* Girl Pants */
+#category12-item1, #category12-item2 { /* Boy Pants */
+    z-index: 6;
+}
+
+/* Boy/Girl Jacket: 7th (outermost) layer */
+#category16-item1, #category16-item2, /* Girl Jacket */
+#category17-item1, #category17-item2 { /* Boy Jacket */
+    z-index: 7;
+}
+
+/* Accessories (category 20 for girl, 21 for boy) - outermost layer */
+#category20-item1, #category20-item2, /* Girl Accessories */
+#category21-item1, #category21-item2 { /* Boy Accessories */
+    z-index: 8;
+}
+
+        .controls {
+            margin-top: 500px;
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .category .section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+        }
+
+        .category img {
+            width: 100px;
+            height: auto;
+            margin: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 5px;
+        }
+
+        .category img:hover {
+            border-color: #3700b3;
+        }
+
+        /* Move panties section 200px to the right */
+        .move-right {
+            margin-left: 200px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-menu">
+        <img src="Mainmenu.png" alt="Main Menu Image">
+        <button onclick="enterGame()">Play</button>
+    </div>
+    <div class="game-container">
+        <div class="base-container">
+            <!-- Base character image -->
+            <img id="base-image" src="Base.png" alt="Base Image">
+
+            <!-- Panties (category 1) images -->
+            <img id="category1-item1" src="Panties1.png" alt="Panties 1" style="visibility: visible;">
+            <img id="category1-item2" src="Panties2.png" alt="Panties 2" style="visibility: hidden;">
+            <img id="category1-item3" src="Panties3.png" alt="Panties 3" style="visibility: hidden;">
+
+            <!-- Girl Bra (category 2) images -->
+            <img id="category2-item1" src="Girlbra1.png" alt="Girl Bra 1" style="visibility: hidden;">
+            <img id="category2-item2" src="Girlbra2.png" alt="Girl Bra 2" style="visibility: visible;">
+            <img id="category2-item3" src="Girlbra3.png" alt="Girl Bra 3" style="visibility: hidden;">
+
+            <!-- Girl Boxers (category 3) images -->
+            <img id="category3-item1" src="Girlboxers1.png" alt="Girl Boxers 1" style="visibility: hidden;">
+            <img id="category3-item2" src="Girlboxers2.png" alt="Girl Boxers 2" style="visibility: hidden;">
+
+            <!-- Girl Sweatshirt (category 4) images -->
+            <img id="category4-item1" src="GirlSweatshirt1.png" alt="Girl Sweatshirt 1" style="visibility: hidden;">
+            <img id="category4-item2" src="GirlSweatshirt2.png" alt="Girl Sweatshirt 2" style="visibility: hidden;">
+            <img id="category4-item3" src="GirlSweatshirt3.png" alt="Girl Sweatshirt 3" style="visibility: hidden;">
+
+            <!-- Boy Sweatshirt (category 5) images -->
+            <img id="category5-item1" src="Boysweatshirt1.png" alt="Boy Sweatshirt 1" style="visibility: hidden;">
+
+            <!-- Underpants (category 6) images -->
+            <img id="category6-item1" src="Underpants1.png" alt="Underpants 1" style="visibility: hidden;">
+            <img id="category6-item2" src="Underpants2.png" alt="Underpants 2" style="visibility: hidden;">
+            <img id="category6-item3" src="Underpants3.png" alt="Underpants 3" style="visibility: hidden;">
+
+            <!-- Boy Bra (category 7) images -->
+            <img id="category7-item1" src="Boybra1.png" alt="Boy Bra 1" style="visibility: hidden;">
+            <img id="category7-item2" src="Boybra2.png" alt="Boy Bra 2" style="visibility: hidden;">
+            <img id="category7-item3" src="Boybra3.png" alt="Boy Bra 3" style="visibility: hidden;">
+
+            <!-- Boy Boxers (category 8) images -->
+            <img id="category8-item1" src="Boxers.png" alt="Boy Boxers 1" style="visibility: visible;">
+            <img id="category8-item2" src="Boxers2.png" alt="Boy Boxers 2" style="visibility: hidden;">
+
+            <!-- Girl Shoes (category 9) images -->
+            <img id="category9-item1" src="Girlshoes1.png" alt="Girl Shoes 1" style="visibility: hidden;">
+            <img id="category9-item2" src="Girlshoes2.png" alt="Girl Shoes 2" style="visibility: hidden;">
+
+            <!-- Boy Shoes (category 10) images -->
+            <img id="category10-item1" src="Boyshoes1.png" alt="Boy Shoes 1" style="visibility: hidden;">
+            <img id="category10-item2" src="Boyshoes2.png" alt="Boy Shoes 2" style="visibility: hidden;">
+
+            <!-- Girl Pants (category 11) images -->
+            <img id="category11-item1" src="Girlpants1.png" alt="Girl Pants 1" style="visibility: hidden;">
+            <img id="category11-item2" src="Girlpants2.png" alt="Girl Pants 2" style="visibility: hidden;">
+            <img id="category11-item3" src="Girlpants3.png" alt="Girl Pants 3" style="visibility: hidden;">
+
+            <!-- Boy Pants (category 12) images -->
+            <img id="category12-item1" src="Boypants1.png" alt="Boy Pants 1" style="visibility: hidden;">
+            <img id="category12-item2" src="Boypants2.png" alt="Boy Pants 2" style="visibility: hidden;">
+
+            <!-- Girl Dresses (category 13) images -->
+            <img id="category13-item1" src="Girldress1.png" alt="Girl Dress 1" style="visibility: hidden;">
+            <img id="category13-item2" src="Girldress2.png" alt="Girl Dress 2" style="visibility: hidden;">
+
+            <!-- Girl Top (category 14) images -->
+            <img id="category14-item1" src="Girltop1.png" alt="Girl Top 1" style="visibility: hidden;">
+            <img id="category14-item2" src="Girltop2.png" alt="Girl Top 2" style="visibility: hidden;">
+
+            <!-- Boy Top (category 15) images -->
+            <img id="category15-item1" src="Boytop1.png" alt="Boy Top 1" style="visibility: hidden;">
+            <img id="category15-item2" src="Boytop2.png" alt="Boy Top 2" style="visibility: hidden;">
+
+            <!-- Girl Jacket (category 16) images -->
+            <img id="category16-item1" src="Girljacket1.png" alt="Girl Jacket 1" style="visibility: hidden;">
+            <img id="category16-item2" src="Girljacket2.png" alt="Girl Jacket 2" style="visibility: hidden;">
+
+            <!-- Boy Jacket (category 17) images -->
+            <img id="category17-item1" src="Boyjacket1.png" alt="Boy Jacket 1" style="visibility: hidden;">
+            <img id="category17-item2" src="Boyjacket2.png" alt="Boy Jacket 2" style="visibility: hidden;">
+
+            <!-- Leggings (category 18 for girl and 19 for boy) -->
+            <img id="category18-item1" src="Girllegging.png" alt="Girl Legging 1" style="visibility: hidden;">
+            <img id="category18-item2" src="Girllegging2.png" alt="Girl Legging 2" style="visibility: hidden;">
+            <img id="category19-item1" src="Boylegging.png" alt="Boy Legging 1" style="visibility: hidden;">
+            <img id="category19-item2" src="Boylegging2.png" alt="Boy Legging 2" style="visibility: hidden;">
+
+            <!-- Accessories (category 20 for girl and 21 for boy) -->
+            <img id="category20-item1" src="Girlaccessory1.png" alt="Girl Accessory 1" style="visibility: hidden;">
+            <img id="category20-item2" src="Girlaccessory2.png" alt="Girl Accessory 2" style="visibility: hidden;">
+            <img id="category21-item1" src="Boyaccessory1.png" alt="Boy Accessory 1" style="visibility: hidden;">
+            <img id="category21-item2" src="Boyaccessory2.png" alt="Boy Accessory 2" style="visibility: hidden;">
+        </div>
+
+        <div class="controls">
+            <!-- Left column (Girl clothing items) -->
+            <div class="left-column move-right">
+                <div class="category">
+                    <div class="section">
+                        <h3>Panties</h3>
+                        <img src="Panties1b.png" alt="Panties 1 Button" onclick="toggleCategory('category1-item1', ['category1-item2', 'category1-item3'])">
+                        <img src="Panties2b.png" alt="Panties 2 Button" onclick="toggleCategory('category1-item2', ['category1-item1', 'category1-item3'])">
+                        <img src="Panties3b.png" alt="Panties 3 Button" onclick="toggleCategory('category1-item3', ['category1-item1', 'category1-item2'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Bra</h3>
+                        <img src="Girlbra1b.png" alt="Girl Bra 1 Button" onclick="toggleCategory('category2-item1', ['category2-item2', 'category2-item3'])">
+                        <img src="Girlbra2b.png" alt="Girl Bra 2 Button" onclick="toggleCategory('category2-item2', ['category2-item1', 'category2-item3'])">
+                        <img src="Girlbra3b.png" alt="Girl Bra 3 Button" onclick="toggleCategory('category2-item3', ['category2-item1', 'category2-item2'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Boxers</h3>
+                        <img src="Girlboxers1b.png" alt="Girl Boxers 1 Button" onclick="toggleCategory('category3-item1', ['category3-item2'])">
+                        <img src="Girlboxers2b.png" alt="Girl Boxers 2 Button" onclick="toggleCategory('category3-item2', ['category3-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Sweatshirt</h3>
+                        <img src="GirlSweatshirt1b.png" alt="Girl Sweatshirt 1 Button" onclick="toggleSweatshirt('category4-item1', ['category4-item2', 'category4-item3'])">
+                        <img src="GirlSweatshirt2b.png" alt="Girl Sweatshirt 2 Button" onclick="toggleSweatshirt('category4-item2', ['category4-item1', 'category4-item3'])">
+                        <img src="GirlSweatshirt3b.png" alt="Girl Sweatshirt 3 Button" onclick="toggleSweatshirt('category4-item3', ['category4-item1', 'category4-item2'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Shoes</h3>
+                        <img src="Girlshoes1b.png" alt="Girl Shoes 1 Button" onclick="toggleCategory('category9-item1', ['category9-item2'])">
+                        <img src="Girlshoes2b.png" alt="Girl Shoes 2 Button" onclick="toggleCategory('category9-item2', ['category9-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Pants</h3>
+                        <img src="Girlpants1b.png" alt="Girl Pants 1 Button" onclick="toggleCategory('category11-item1', ['category11-item2', 'category11-item3'])">
+                        <img src="Girlpants2b.png" alt="Girl Pants 2 Button" onclick="toggleCategory('category11-item2', ['category11-item1', 'category11-item3'])">
+                        <img src="Girlpants3b.png" alt="Girl Pants 3 Button" onclick="toggleCategory('category11-item3', ['category11-item1', 'category11-item2'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Dress</h3>
+                        <img src="Girldress1b.png" alt="Girl Dress 1 Button" onclick="toggleDress('category13-item1', ['category13-item2'])">
+                        <img src="Girldress2b.png" alt="Girl Dress 2 Button" onclick="toggleDress('category13-item2', ['category13-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Top</h3>
+                        <img src="Girltop1b.png" alt="Girl Top 1 Button" onclick="toggleGirlTop('category14-item1', ['category14-item2'])">
+                        <img src="Girltop2b.png" alt="Girl Top 2 Button" onclick="toggleGirlTop('category14-item2', ['category14-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Girl Jacket</h3>
+                        <img src="Girljacket1b.png" alt="Girl Jacket 1 Button" onclick="toggleCategory('category16-item1', ['category16-item2'])">
+                        <img src="Girljacket2b.png" alt="Girl Jacket 2 Button" onclick="toggleCategory('category16-item2', ['category16-item1'])">
+                    </div>
+                </div>
+            </div>
+<div class="category">
+    <div class="section">
+        <h3>Girl Leggings</h3>
+        <img src="Girlleggingb.png" alt="Girl Legging 1 Button" onclick="toggleCategory('category18-item1', ['category18-item2'])">
+        <img src="Girllegging2b.png" alt="Girl Legging 2 Button" onclick="toggleCategory('category18-item2', ['category18-item1'])">
+    </div>
+</div>
+<div class="category">
+    <div class="section">
+        <h3>Girl Accessories</h3>
+        <img src="Girlaccessory1b.png" alt="Girl Accessory 1 Button" onclick="toggleCategory('category20-item1', ['category20-item2'])">
+        <img src="Girlaccessory2b.png" alt="Girl Accessory 2 Button" onclick="toggleCategory('category20-item2', ['category20-item1'])">
+    </div>
+</div>
+
+            <!-- Right column (Boy clothing items) -->
+            <div class="right-column">
+                <div class="category">
+                    <div class="section">
+                        <h3>Underpants</h3>
+                        <img src="Underpants1b.png" alt="Underpants 1 Button" onclick="toggleCategory('category6-item1', ['category6-item2', 'category6-item3'])">
+                        <img src="Underpants2b.png" alt="Underpants 2 Button" onclick="toggleCategory('category6-item2', ['category6-item1', 'category6-item3'])">
+                        <img src="Underpants3b.png" alt="Underpants 3 Button" onclick="toggleCategory('category6-item3', ['category6-item1', 'category6-item2'])">
+<div class="category">
+    <div class="section">
+        <h3>Boy Leggings</h3>
+        <img src="Boyleggingb.png" alt="Boy Legging 1 Button" onclick="toggleCategory('category19-item1', ['category19-item2'])">
+        <img src="Boylegging2b.png" alt="Boy Legging 2 Button" onclick="toggleCategory('category19-item2', ['category19-item1'])">
+    </div>
+</div>
+<div class="category">
+    <div class="section">
+        <h3>Boy Accessories</h3>
+        <img src="Boyaccessory1b.png" alt="Boy Accessory 1 Button" onclick="toggleCategory('category21-item1', ['category21-item2'])">
+        <img src="Boyaccessory2b.png" alt="Boy Accessory 2 Button" onclick="toggleCategory('category21-item2', ['category21-item1'])">
+    </div>
+</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Bra</h3>
+                        <img src="Boybra1b.png" alt="Boy Bra 1 Button" onclick="toggleCategory('category7-item1', ['category7-item2'])">
+                        <img src="Boybra2b.png" alt="Boy Bra 2 Button" onclick="toggleCategory('category7-item2', ['category7-item1'])">
+                        <img src="Boybra3b.png" alt="Boy Bra 3 Button" onclick="toggleCategory('category7-item3', ['category7-item1', 'category7-item2'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Boxers</h3>
+                        <img src="Boxersb.png" alt="Boy Boxers 1 Button" onclick="toggleCategory('category8-item1', ['category8-item2'])">
+                        <img src="Boxers2b.png" alt="Boy Boxers 2 Button" onclick="toggleCategory('category8-item2', ['category8-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Sweatshirt</h3>
+                        <img src="Boysweatshirt1b.png" alt="Boy Sweatshirt 1 Button" onclick="toggleCategory('category5-item1', [])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Shoes</h3>
+                        <img src="Boyshoes1b.png" alt="Boy Shoes 1 Button" onclick="toggleCategory('category10-item1', ['category10-item2'])">
+                        <img src="Boyshoes2b.png" alt="Boy Shoes 2 Button" onclick="toggleCategory('category10-item2', ['category10-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Pants</h3>
+                        <img src="Boypants1b.png" alt="Boy Pants 1 Button" onclick="toggleCategory('category12-item1', ['category12-item2'])">
+                        <img src="Boypants2b.png" alt="Boy Pants 2 Button" onclick="toggleCategory('category12-item2', ['category12-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Top</h3>
+                        <img src="Boytop1b.png" alt="Boy Top 1 Button" onclick="toggleCategory('category15-item1', ['category15-item2'])">
+                        <img src="Boytop2b.png" alt="Boy Top 2 Button" onclick="toggleCategory('category15-item2', ['category15-item1'])">
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="section">
+                        <h3>Boy Jacket</h3>
+                        <img src="Boyjacket1b.png" alt="Boy Jacket 1 Button" onclick="toggleCategory('category17-item1', ['category17-item2'])">
+                        <img src="Boyjacket2b.png" alt="Boy Jacket 2 Button" onclick="toggleCategory('category17-item2', ['category17-item1'])">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function enterGame() {
+            document.querySelector('.main-menu').style.display = 'none';
+            document.querySelector('.game-container').style.display = 'block';
+        }
+
+        // Function to toggle items in the same category, allowing only one visible item per category
+        function toggleCategory(selectedItemId, otherItemsInCategory) {
+            otherItemsInCategory.forEach(itemId => {
+                document.getElementById(itemId).style.visibility = 'hidden';
+            });
+
+            const selectedItem = document.getElementById(selectedItemId);
+            if (selectedItem.style.visibility === 'hidden') {
+                selectedItem.style.visibility = 'visible';
+            } else {
+                selectedItem.style.visibility = 'hidden';
+            }
+        }
+
+        // Function to toggle dress and remove girl tops and sweatshirts if worn
+        function toggleDress(selectedItemId, otherItemsInCategory) {
+            // Hide the Girl Tops and Girl Sweatshirts if any dress is selected
+            document.getElementById('category14-item1').style.visibility = 'hidden';
+            document.getElementById('category14-item2').style.visibility = 'hidden';
+            document.getElementById('category4-item1').style.visibility = 'hidden';
+            document.getElementById('category4-item2').style.visibility = 'hidden';
+            document.getElementById('category4-item3').style.visibility = 'hidden';
+
+            // Hide all other dresses in the category
+            toggleCategory(selectedItemId, otherItemsInCategory);
+        }
+
+        // Function to toggle girl top and remove dress if worn
+        function toggleGirlTop(selectedItemId, otherItemsInCategory) {
+            // Hide the Girl Dresses if any girl top is selected
+            document.getElementById('category13-item1').style.visibility = 'hidden';
+            document.getElementById('category13-item2').style.visibility = 'hidden';
+
+            // Hide all other girl tops in the category
+            toggleCategory(selectedItemId, otherItemsInCategory);
+        }
+
+        // Function to toggle sweatshirt and remove dress if worn
+        function toggleSweatshirt(selectedItemId, otherItemsInCategory) {
+            // Hide the Girl Dresses if any sweatshirt is selected
+            document.getElementById('category13-item1').style.visibility = 'hidden';
+            document.getElementById('category13-item2').style.visibility = 'hidden';
+
+            // Hide all other sweatshirts in the category
+            toggleCategory(selectedItemId, otherItemsInCategory);
+        }
+    </script>
+</body>
+</html>
